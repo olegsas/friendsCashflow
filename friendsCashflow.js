@@ -433,10 +433,47 @@ function randomFriendId(){
     return friendId;
 }// we return Id of the random chosen friends
 
+function borrow(amount, currency){
+    var borrowResultA = []; // we store the result of the borrow function
+    borrowResultA[0] = 0; borrowResultA[1] = 0; borrowResultA[2] = 0;
+    // 0 - Byr, 1 - Byn, 2 - Usd
+    var currency = currency;
+    var Byr;
+    var Byn;
+    var Usd;
+    switch(currency){
+        case "Byr":
+        // Math.ceil(Byr/1000000) - to round it to a bigger number to borrow it
+        Byr = // counts as 1 000 000, 2 000 000, 3 000 000 etc.
+        break;
+
+        case "Byn":
+        friendId = friendsNamesIdH.secondFriend;
+        break;
+
+        case "Usd":
+        friendId = friendsNamesIdH.thirdFriend;
+    }
+
+}
+
+function makeBorrowTransaction(){
+
+}
+
 function ifWeNeedBorrow(cycleTimeDay, Byr, Byn, Usd){
     var borrowResultA = []; // we store the result of the borrow function
-    if((Byr < 0) || (Byn < 0) || (Usd < 0)){
-
+    if(Byr < 0){
+        borrowResultA = borrow(-Byr, "Byr");
+        makeBorrowTransaction();
+    }
+    if(Byn < 0){
+        borrowResultA = borrow(-Byn, "Byn");
+        makeBorrowTransaction();
+    }
+    if(Usd < 0){
+        borrowResultA = borrow(-Usd, "Usd");
+        makeBorrowTransaction();
     }
 }
 
