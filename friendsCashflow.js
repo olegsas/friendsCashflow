@@ -1,6 +1,7 @@
 const DATE_OF_DENOMINATION = new Date("2016-07-01");//the date of denomination, the constants
 const DAY_OF_DENOMINATION = Math.floor(DATE_OF_DENOMINATION.getTime()/(1000*60*60*24));// we find a day since zero point
 var WalletsIdH = {}; // the object with fields {name: ObjectID} for binding with transaction collection
+var friendsNamesIdH = {}; // the object with fields{name: ObjectID} for the friends database
 
 function standartDate(anyDay){// this function normalize string date into a Date object
 
@@ -23,6 +24,13 @@ function findWallet(name){
     var Element = Cursor[0];
     WalletsIdH[name] = Element['_id'];// we store ObjectID from the database into the hash
 }
+
+function writeFriends(name){
+    db.friends.insert({"name": name});
+    var Cursor = db.friends.find({"name": name}).toArray();
+    var Element = Cursor[0];
+    friendsNamesIdH[name] = Element['_id'];
+}// we create friends collection
 
 function dataRates(){
     var ratesdbH = db.rates.find().toArray();// we accept it from the DB
@@ -406,11 +414,18 @@ function denominationExchange(nowTimeDay, PurseByr, Byr){
     // incoming transaction Byn
 }
 
+function ifWeNeedBorrow(){
+    
+}
+
 function runCashFlowPLus(begin, end){// we want to use day from the begining Day 1970
     // setup the WalletsIdH
     findWallet("PurseByr"); findWallet("PurseByn"); findWallet("SafeUsd");
     findWallet("CardByr"); findWallet("CardByn");
     //_id of the wallets are in the WalletsIdH[accountName]
+    db.friends.remove({}); // we remove the collection if we in case if it was created before
+    writeFriends("firstFriend"); writeFriends("secondFriend"); writeFriends("thirdFriend");
+    // we created collection friends
     //ratesH.data is in a string format
     var startDATE = standartDate(begin);
     var startTimeDay = Math.floor(startDATE.getTime()/(1000*60*60*24));
@@ -425,7 +440,9 @@ function runCashFlowPLus(begin, end){// we want to use day from the begining Day
     var cashboxA = []; // we store the result of calculateCashDelta in it
     var preCashboxA = []; // we previously calculate the cashflow before operating currency exchange
     preCashboxA[0] = 0; preCashboxA[1] = 0; preCashboxA[2] = 0; preCashboxA[3] = 0; preCashboxA[4] = 0;
-
+    var beforeCashboxA = []; // we previously calculate the cashflow before operating Borrow
+    beforeCashboxA[0] = 0; beforeCashboxA[1] = 0; beforeCashboxA[2] = 0; beforeCashboxA[3] = 0; beforeCashboxA[4] = 0;
+    
     for(var cycleTimeDay = startTimeDay; cycleTimeDay <= finishTimeDay; cycleTimeDay++){
         
         cashboxA = calculateCashDelta(cycleTimeDay);
@@ -445,10 +462,18 @@ function runCashFlowPLus(begin, end){// we want to use day from the begining Day
         }
         // print("cycleTimeDay ---------------------- " + cycleTimeDay);
         
-        ifWeNeedExchange(cycleTimeDay, ratesH, preCashboxA[0], preCashboxA[1], preCashboxA[2]); // I have no idea to use it
+        ifWeNeedExchange(cycleTimeDay, ratesH, preCashboxA[0], preCashboxA[1], preCashboxA[2]);
         // we generate the exchange transactions if we need it
         cashboxA = calculateCashDelta(cycleTimeDay);
         // cashboxA is an actual balance of the day with exchanges
+        for(var k = 0; k < flowcashboxA.length; k++){
+            beforeCashboxA[i] = flowcashboxA[i] + cashboxA[i];
+            // we are calculating previously cashflow without borrow
+        }
+        ifWeNeedBorrow(cycleTimeDay, beforeCashboxA[0], beforeCashboxA[1], beforeCashboxA[2]);
+        // we generate borrow transactions if we need it
+        cashboxA = calculateCashDelta(cycleTimeDay);
+        // cashboxA is an actual balance of the day with borrow
         for(var j = 0; j < flowcashboxA.length; j++){
             flowcashboxA[j] = flowcashboxA[j] + cashboxA[j];
         }
