@@ -414,8 +414,30 @@ function denominationExchange(nowTimeDay, PurseByr, Byr){
     // incoming transaction Byn
 }
 
-function ifWeNeedBorrow(){
-    
+function randomFriendId(){
+    var n; // a random number in (1,2,3)
+    var friendId;
+    n = Math.floor(Math.random()*3+1);
+    switch(n){
+        case 1:
+        friendId = friendsNamesIdH.firstFriend;
+        break;
+
+        case 2:
+        friendId = friendsNamesIdH.secondFriend;
+        break;
+
+        case 3:
+        friendId = friendsNamesIdH.thirdFriend;
+    }
+    return friendId;
+}// we return Id of the random chosen friends
+
+function ifWeNeedBorrow(cycleTimeDay, Byr, Byn, Usd){
+    var borrowResultA = []; // we store the result of the borrow function
+    if((Byr < 0) || (Byn < 0) || (Usd < 0)){
+
+    }
 }
 
 function runCashFlowPLus(begin, end){// we want to use day from the begining Day 1970
