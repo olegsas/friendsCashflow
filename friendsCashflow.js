@@ -473,7 +473,7 @@ function makeBorrowTransaction(nowTimeDay, Type, Category, Amount, Currency, Acc
 }
 
 function ifWeNeedBorrow(nowTimeDay, Byr, Byn, Usd){
-    // print("Day = "+ nowTimeDay);
+    // print("BorrowDay = "+ nowTimeDay);
     // print("Byr = " + Byr);
     // print("Byn = " + Byn);
     // print("Usd = " + Usd);
