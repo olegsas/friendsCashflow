@@ -436,44 +436,55 @@ function randomFriendId(){
 function borrow(amount, currency){
     var borrowResultA = []; // we store the result of the borrow function
     borrowResultA[0] = 0; borrowResultA[1] = 0; borrowResultA[2] = 0;
-    // 0 - Byr, 1 - Byn, 2 - Usd
+    // 0 - Byr, 1 - Byn, 2 - Usd, 3 - Friend's Id. Let's function borrow choose random friend
     var currency = currency;
-    var Byr;
-    var Byn;
-    var Usd;
+    var Byr = 0;
+    var Byn = 0;
+    var Usd = 0;
     switch(currency){
         case "Byr":
+        Byr = Math.ceil(amount / 1000000);
         // Math.ceil(Byr/1000000) - to round it to a bigger number to borrow it
-        Byr = // counts as 1 000 000, 2 000 000, 3 000 000 etc.
+        //Byr = // counts as 1 000 000, 2 000 000, 3 000 000 etc.
         break;
 
         case "Byn":
-        friendId = friendsNamesIdH.secondFriend;
+        Byn = Math.ceil(amount / 100);
         break;
 
         case "Usd":
-        friendId = friendsNamesIdH.thirdFriend;
+        Usd = Math.ceil(amount / 100);
     }
+    borrowResultA[0] = Byr; borrowResultA[1] = Byn; borrowResultA[2] = Usd;
+    borrowResultA[3] = randomFriendId();
+    
+    return borrowResultA;
+}// returns borrowResultA[0]...borrowResultA[4]
 
+function makeBorrowTransaction(nowTimeDay, Type, Category, Amount, Currency, Account, Friend){
+    var borrowDate = new Date();
+    borrowDate.setTime(nowTimeDay*1000*60*60*24);// Data is in standard format
+    var Type = Type;
+    var Category = Category; 
+    var Currency = Currency;
+    var Account = Account;
+    db.transactions.insert({"Date": borrowDate, "Type": Type, "Category": Category, "Amount": Amount,
+                            "Currency": Currency, "Account": Account, "Wallet_id": WalletsIdH[Account], "Friend_id": Friend});
 }
 
-function makeBorrowTransaction(){
-
-}
-
-function ifWeNeedBorrow(cycleTimeDay, Byr, Byn, Usd){
+function ifWeNeedBorrow(nowTimeDay, Byr, Byn, Usd){
     var borrowResultA = []; // we store the result of the borrow function
     if(Byr < 0){
         borrowResultA = borrow(-Byr, "Byr");
-        makeBorrowTransaction();
+        makeBorrowTransaction(nowTimeDay, "Inc", "Borrow", borrowResultA[0], "Byr", "PurseByr", borrowResultA[3]);
     }
     if(Byn < 0){
         borrowResultA = borrow(-Byn, "Byn");
-        makeBorrowTransaction();
+        makeBorrowTransaction(nowTimeDay, "Inc", "Borrow", borrowResultA[1], "Byn", "PurseByn", borrowResultA[3]);
     }
     if(Usd < 0){
         borrowResultA = borrow(-Usd, "Usd");
-        makeBorrowTransaction();
+        makeBorrowTransaction(nowTimeDay, "Inc", "Borrow", borrowResultA[2], "Usd", "SafeUsd", borrowResultA[3]);
     }
 }
 
