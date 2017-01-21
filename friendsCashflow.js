@@ -443,17 +443,17 @@ function borrow(amount, currency){
     var Usd = 0;
     switch(currency){
         case "Byr":
-        Byr = Math.ceil(amount / 1000000);
+        Byr = 1000000 * (Math.ceil(amount / 1000000));
         // Math.ceil(Byr/1000000) - to round it to a bigger number to borrow it
         //Byr = // counts as 1 000 000, 2 000 000, 3 000 000 etc.
         break;
 
         case "Byn":
-        Byn = Math.ceil(amount / 100);
+        Byn = 100 * (Math.ceil(amount / 100));
         break;
 
         case "Usd":
-        Usd = Math.ceil(amount / 100);
+        Usd = 100 * (Math.ceil(amount / 100));
     }
     borrowResultA[0] = Byr; borrowResultA[1] = Byn; borrowResultA[2] = Usd;
     borrowResultA[3] = randomFriendId();
