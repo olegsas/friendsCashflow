@@ -473,10 +473,10 @@ function makeBorrowTransaction(nowTimeDay, Type, Category, Amount, Currency, Acc
 }
 
 function ifWeNeedBorrow(nowTimeDay, Byr, Byn, Usd){
-    print("Day = "+ nowTimeDay);
-    print("Byr = " + Byr);
-    print("Byn = " + Byn);
-    print("Usd = " + Usd);
+    // print("Day = "+ nowTimeDay);
+    // print("Byr = " + Byr);
+    // print("Byn = " + Byn);
+    // print("Usd = " + Usd);
     var borrowResultA = []; // we store the result of the borrow function
     if(Byr < 0){
         borrowResultA = borrow(-Byr, "Byr");
@@ -521,9 +521,9 @@ function runCashFlowPLus(begin, end){// we want to use day from the begining Day
         
         cashboxA = calculateCashDelta(cycleTimeDay);
         // dayCashboxA[0] = Byr; dayCashboxA[1] = Byn; dayCashboxA[2] = Usd; dayCashboxA[3] = PurseByr; dayCashboxA[4] = CardByr;
-        print("1-----cashboxA[0] = " + cashboxA[0]);
-        print("1-----cashboxA[1] = " + cashboxA[1]);
-        print("1-----cashboxA[2] = " + cashboxA[2]);
+        // print("1-----cashboxA[0] = " + cashboxA[0]);
+        // print("1-----cashboxA[1] = " + cashboxA[1]);
+        // print("1-----cashboxA[2] = " + cashboxA[2]);
         for(var i = 0; i < flowcashboxA.length; i++){
             preCashboxA[i] = flowcashboxA[i] + cashboxA[i];
             // we are calculating previously cashflow without exchange
@@ -542,18 +542,18 @@ function runCashFlowPLus(begin, end){// we want to use day from the begining Day
         ifWeNeedExchange(cycleTimeDay, ratesH, preCashboxA[0], preCashboxA[1], preCashboxA[2]);
         // we generate the exchange transactions if we need it
         cashboxA = calculateCashDelta(cycleTimeDay);
-        print("2-----cashboxA[0] = " + cashboxA[0]);
-        print("2-----cashboxA[1] = " + cashboxA[1]);
-        print("2-----cashboxA[2] = " + cashboxA[2]);
+        // print("2-----cashboxA[0] = " + cashboxA[0]);
+        // print("2-----cashboxA[1] = " + cashboxA[1]);
+        // print("2-----cashboxA[2] = " + cashboxA[2]);
         // cashboxA is an actual balance of the day with exchanges
         for(var k = 0; k < flowcashboxA.length; k++){
             beforeCashboxA[k] = flowcashboxA[k] + cashboxA[k];
             // we are calculating previously cashflow without borrow
         }
-        print("##Day = " + cycleTimeDay);
-        print("##beforeCashboxA[0] = "+ beforeCashboxA[0]);
-        print("##beforeCashboxA[1] = "+ beforeCashboxA[1]);
-        print("##beforeCashboxA[2] = "+ beforeCashboxA[2]);
+        // print("##Day = " + cycleTimeDay);
+        // print("##beforeCashboxA[0] = "+ beforeCashboxA[0]);
+        // print("##beforeCashboxA[1] = "+ beforeCashboxA[1]);
+        // print("##beforeCashboxA[2] = "+ beforeCashboxA[2]);
         ifWeNeedBorrow(cycleTimeDay, beforeCashboxA[0], beforeCashboxA[1], beforeCashboxA[2]);
         // we generate borrow transactions if we need it
         cashboxA = calculateCashDelta(cycleTimeDay);
